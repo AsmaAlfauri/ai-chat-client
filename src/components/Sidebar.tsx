@@ -3,8 +3,10 @@ import { useConversationStore } from '../stores/conversationStore'
 import { useAuthStore } from '../stores/authStore'
 import { createConversation, renameConversation, deleteConversation } from '../lib/conversations'
 import { logout } from '../lib/auth'
+import { useThemeStore } from '../stores/themeStore'
 
 export default function Sidebar() {
+  const { dark, toggle } = useThemeStore()
   const { conversations, activeId, setActiveId } = useConversationStore()
   const { user } = useAuthStore()
   const [renaming, setRenaming] = useState<string | null>(null)
@@ -22,7 +24,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="flex h-full w-64 flex-col bg-gray-900 text-white">
+    <div className="flex h-full w-64 flex-col bg-gray-900 dark:bg-gray-950 text-white">
       <div className="p-4 border-b border-gray-700">
         <button
           onClick={handleNew}
@@ -70,11 +72,17 @@ export default function Sidebar() {
         ))}
       </div>
 
-      <div className="p-4 border-t border-gray-700">
-        <p className="mb-2 truncate text-xs text-gray-500">{user?.email}</p>
+      <div className="p-4 border-t border-gray-700 flex flex-col gap-2">
+        <button
+          onClick={toggle}
+          className="w-full rounded-lg bg-gray-700 dark:bg-gray-800 py-1 text-sm hover:bg-gray-600"
+        >
+          {dark ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+        <p className="truncate text-xs text-gray-500">{user?.email}</p>
         <button
           onClick={logout}
-          className="w-full rounded-lg bg-gray-700 py-1 text-sm hover:bg-gray-600"
+          className="w-full rounded-lg bg-gray-700 dark:bg-gray-800 py-1 text-sm hover:bg-gray-600"
         >
           Sign Out
         </button>

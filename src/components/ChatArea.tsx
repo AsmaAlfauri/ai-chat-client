@@ -28,14 +28,14 @@ export default function ChatArea() {
 
   if (!activeId) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-gray-50">
+      <div className="flex flex-1 items-center justify-center bg-gray-50 dark:bg-gray-900">
         <p className="text-gray-400 text-sm">Select or create a conversation</p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-gray-50">
+    <div className="flex flex-1 flex-col bg-gray-50 dark:bg-gray-900">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && !loading && (
@@ -47,7 +47,7 @@ export default function ChatArea() {
               className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
                 msg.role === 'user'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-800 shadow-sm border border-gray-200'
+                  : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-sm border border-gray-200 dark:border-gray-700'
               }`}
               dangerouslySetInnerHTML={{ __html: marked(msg.content) as string }}
             />
@@ -55,7 +55,7 @@ export default function ChatArea() {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl bg-white px-4 py-2 text-sm text-gray-400 shadow-sm border border-gray-200">
+            <div className="rounded-2xl bg-white dark:bg-gray-800 px-4 py-2 text-sm text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700">
               Thinking...
             </div>
           </div>
@@ -69,10 +69,10 @@ export default function ChatArea() {
       </div>
 
       {/* Input */}
-      <div className="border-t border-gray-200 bg-white p-4">
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
         <div className="flex gap-2">
           <textarea
-            className="flex-1 resize-none rounded-xl border border-gray-200 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 resize-none rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
             rows={1}
             placeholder="Type a message... (Enter to send, Shift+Enter for newline)"
             value={input}
