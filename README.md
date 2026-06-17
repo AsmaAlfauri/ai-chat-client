@@ -1,30 +1,66 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# AI Chat Desktop Client
 
-Currently, two official plugins are available:
+A desktop AI chat application built with Electron, React, TypeScript, and PocketBase.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js v18+
+- PocketBase binary (included in `/pocketbase` folder)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Setup & Run
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+### 1. Install dependencies
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 2. Fix Electron binary (Windows only)
+Download `electron-v30.5.1-win32-x64.zip` from:
+https://github.com/electron/electron/releases/tag/v30.5.1
+
+Extract all contents into:
+`node_modules/electron/dist/`
+
+Then run:
+```bash
+printf "dist/electron.exe" > node_modules/electron/path.txt
+```
+
+### 3. Start PocketBase
+```bash
+cd pocketbase
+./pocketbase.exe serve
+```
+First run: open the printed URL to create your superuser account.
+
+Then set API Rules for `conversations` and `messages` collections to:
+```
+@request.auth.id != ""
+```
+
+### 4. Start Mock AI Server
+```bash
+npm run mock-ai
+```
+
+### 5. Start the App
+```bash
+npm run dev
+```
+
+## What Works
+- Email/password login with session persistence
+- Token stored via Electron safeStorage (not plaintext)
+- Conversations: create, rename, delete
+- Chat: send messages, receive echo reply
+- History persists after restart
+- Markdown rendering in AI replies
+- Error states on failed requests
+
+## Known Issues / Not Implemented
+- Migration script for PocketBase schema (manual setup required)
+- No unit tests yet
+- Electron binary download fails automatically on some Windows machines (manual fix documented above)
+- Nice-to-haves skipped: optimistic updates, realtime sync, OAuth, auto-update
+
