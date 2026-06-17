@@ -1,15 +1,14 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 migrate((app) => {
-    // conversations collection
+    // Skip if already exists
+    try { app.findCollectionByNameOrId("conversations"); return; } catch (_) {}
+
     const conversations = new Collection({
         name: "conversations",
         type: "base",
-        fields: [{
-                name: "title",
-                type: "text",
-                required: true,
-            },
+        fields: [
+            { name: "title", type: "text", required: true },
             {
                 name: "user",
                 type: "relation",
@@ -26,7 +25,6 @@ migrate((app) => {
     })
     app.save(conversations)
 
-    // messages collection
     const messages = new Collection({
         name: "messages",
         type: "base",
@@ -37,16 +35,8 @@ migrate((app) => {
                 collectionId: conversations.id,
                 cascadeDelete: true,
             },
-            {
-                name: "role",
-                type: "text",
-                required: true,
-            },
-            {
-                name: "content",
-                type: "text",
-                required: true,
-            },
+            { name: "role", type: "text", required: true },
+            { name: "content", type: "text", required: true },
         ],
         listRule: "@request.auth.id != ''",
         viewRule: "@request.auth.id != ''",
@@ -56,10 +46,8 @@ migrate((app) => {
     })
     app.save(messages)
 }, (app) => {
-    // revert
-    const messages = app.findCollectionByNameOrId("messages")
-    app.delete(messages)
-
-    const conversations = app.findCollectionByNameOrId("conversations")
-    app.delete(conversations)
+    try { const m = app.findCollectionByNameOrId("messages");
+        app.delete(m) } catch (_) {}
+    try { const c = app.findCollectionByNameOrId("conversations");
+        app.delete(c) } catch (_) {}
 })
