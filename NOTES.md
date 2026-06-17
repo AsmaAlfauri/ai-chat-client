@@ -1,12 +1,11 @@
-
 # Notes
 
 ## Architecture
 
 The app follows a clean Electron main/renderer split:
 
-- **Main process** (`electron/main.ts`): creates the window, handles safeStorage via IPC
-- **Preload bridge** (`electron/preload.ts`): exposes only `storeToken` and `loadToken` to the renderer
+- **Main process** (`electron/main.ts`): creates the window, handles safeStorage via IPC, catches uncaught exceptions and writes to app.log
+- **Preload bridge** (`electron/preload.ts`): exposes only `storeToken`, `loadToken`, `logError`, and `openExternal` to the renderer
 - **Renderer** (React): all UI, Zustand stores, PocketBase calls
 
 ## State Management
@@ -24,24 +23,31 @@ Three focused Zustand stores:
 
 ## What I'd Do Next
 
-- Add PocketBase migration script for one-command schema setup
-- Add unit tests for sendMessage and persistence logic
 - Optimistic message send with rollback on error
-- Light/Dark theme toggle
+- Realtime sync across windows via PocketBase subscriptions
+- Virtualised list for long chat histories
+- Auto-update via electron-updater
 
 ## What I Cut & Why
 
-- **OAuth**: would add complexity without demonstrating more architecture
+- **Optimistic updates**: adds complexity without changing the core architecture demonstration
 - **Realtime sync**: PocketBase subscriptions are straightforward but out of scope for 2-3 days
 - **Auto-update**: nice demo but not core functionality
 - **Virtualised list**: not needed for typical chat history length
+- **Single-instance lock**: minor UX improvement, skipped to stay focused on core features
 
-## Bonus: Basic Error Logging
-- Chose this over theme/OAuth/auto-update because it adds 
-  real production value with minimal scope creep.
-- Main errors caught via uncaughtException → app.log
-- Renderer errors sent via IPC bridge → same log file
+## Bonus Implemented (3/4)
 
-## Bonus: OAuth login via PocketBase built-in OAuth2
-- Supports Google and GitHub
-- Same token storage flow as email/password (safeStorage)
+### Light/Dark Theme
+- Toggle persisted via localStorage
+- Tailwind dark mode classes applied globally
+
+### Basic Error Logging
+- Main process errors caught via `uncaughtException` → written to `app.log` in Electron userData folder
+- Renderer errors sent via IPC bridge (`logError`) → same log file
+- Chose this because it adds real production value with minimal scope creep
+
+### OAuth Login (Google & GitHub)
+- Implemented via PocketBase built-in OAuth2
+- Opens browser externally via `shell.openExternal` (correct Electron pattern)
+- Same token storage flow as email/password (safeStorage, never plaintext)

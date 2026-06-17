@@ -1,4 +1,4 @@
-
+```markdown
 # AI Chat Desktop Client
 
 A desktop AI chat application built with Electron, React, TypeScript, and PocketBase.
@@ -33,11 +33,7 @@ cd pocketbase
 ./pocketbase.exe serve
 ```
 First run: open the printed URL to create your superuser account.
-
-Then set API Rules for `conversations` and `messages` collections to:
-```
-@request.auth.id != ""
-```
+Schema is automatically applied via migration script in `/pocketbase/pb_migrations/`.
 
 ### 4. Create a Test User
 ```bash
@@ -63,9 +59,12 @@ npm run dev
 - History persists after restart
 - Markdown rendering in AI replies
 - Error states on failed requests
+- Light/Dark theme (persisted)
+- OAuth login: Google & GitHub via PocketBase
+- Error logging: main + renderer errors written to app.log
+- Unit tests: chatStore send/persist logic
 
 ## Known Issues / Not Implemented
-- Migration script for PocketBase schema (manual setup required)
-- No unit tests yet
 - Electron binary download fails automatically on some Windows machines (manual fix documented above)
-- Nice-to-haves skipped: optimistic updates, realtime sync, OAuth, auto-update
+- Nice-to-haves skipped: optimistic updates, realtime sync, auto-update
+```
