@@ -6,10 +6,9 @@ export async function login(email: string, password: string) {
   const token = authData.token
   const user = { id: authData.record.id, email: authData.record.email }
 
-  // encrypt token via Electron safeStorage
-  const encrypted = await (window as any).electronAPI.storeToken(token)
+  pb.authStore.save(token, authData.record)
 
-  // save encrypted token to localStorage (not plaintext token!)
+  const encrypted = await (window as any).electronAPI.storeToken(token)
   localStorage.setItem('enc_token', encrypted)
 
   useAuthStore.getState().setAuth(token, encrypted, user)
@@ -24,13 +23,12 @@ export async function restoreSession() {
     const token = await (window as any).electronAPI.loadToken(encrypted)
     if (!token) return false
 
-    pb.authStore.save(token, null)
-    await pb.collection('users').authRefresh()
+    pb.authStore.save(token, { id: '', email: '' })
+    const authData = await pb.collection('users').authRefresh()
 
-    const record = pb.authStore.record
     useAuthStore.getState().setAuth(token, encrypted, {
-      id: record?.id ?? '',
-      email: record?.email ?? '',
+      id: authData.record.id,
+      email: authData.record.email,
     })
     return true
   } catch {
@@ -38,7 +36,6 @@ export async function restoreSession() {
     return false
   }
 }
-
 export function logout() {
   pb.authStore.clear()
   localStorage.removeItem('enc_token')
