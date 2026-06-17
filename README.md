@@ -67,4 +67,3 @@ npm run dev
 ## Known Issues / Not Implemented
 - Electron binary download fails automatically on some Windows machines (manual fix documented above)
 - Nice-to-haves skipped: optimistic updates, realtime sync, auto-update
-```
