@@ -39,12 +39,18 @@ Then set API Rules for `conversations` and `messages` collections to:
 @request.auth.id != ""
 ```
 
-### 4. Start Mock AI Server
+### 4. Create a Test User
+```bash
+./pocketbase.exe superuser upsert your@email.com yourpassword
+```
+Or from the dashboard: `http://127.0.0.1:8090/_/` → Collections → users → New record
+
+### 5. Start Mock AI Server
 ```bash
 npm run mock-ai
 ```
 
-### 5. Start the App
+### 6. Start the App
 ```bash
 npm run dev
 ```
@@ -63,4 +69,3 @@ npm run dev
 - No unit tests yet
 - Electron binary download fails automatically on some Windows machines (manual fix documented above)
 - Nice-to-haves skipped: optimistic updates, realtime sync, OAuth, auto-update
-
