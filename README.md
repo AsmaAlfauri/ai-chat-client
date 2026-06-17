@@ -1,4 +1,4 @@
-```markdown
+
 # AI Chat Desktop Client
 
 A desktop AI chat application built with Electron, React, TypeScript, and PocketBase.
