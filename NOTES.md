@@ -35,3 +35,13 @@ Three focused Zustand stores:
 - **Realtime sync**: PocketBase subscriptions are straightforward but out of scope for 2-3 days
 - **Auto-update**: nice demo but not core functionality
 - **Virtualised list**: not needed for typical chat history length
+
+## Bonus: Basic Error Logging
+- Chose this over theme/OAuth/auto-update because it adds 
+  real production value with minimal scope creep.
+- Main errors caught via uncaughtException → app.log
+- Renderer errors sent via IPC bridge → same log file
+
+## Bonus: OAuth login via PocketBase built-in OAuth2
+- Supports Google and GitHub
+- Same token storage flow as email/password (safeStorage)

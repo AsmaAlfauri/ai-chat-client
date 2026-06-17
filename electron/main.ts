@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, safeStorage } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { log, logError } from './logger'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -65,4 +66,12 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-app.whenReady().then(createWindow)
+
+
+app.whenReady().then(() => {
+  log('INFO', 'App started')
+  createWindow()
+})
+ipcMain.handle('log-error', (_event, message: string) => {
+  logError(`Renderer: ${message}`)
+})

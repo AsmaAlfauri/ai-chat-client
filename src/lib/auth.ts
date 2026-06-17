@@ -15,6 +15,22 @@ export async function login(email: string, password: string) {
   return user
 }
 
+// ✅ أضيفي هاي الـ function
+export async function loginWithOAuth(provider: 'google' | 'github') {
+  const authData = await pb.collection('users').authWithOAuth2({ provider })
+
+  const token = authData.token
+  const user = { id: authData.record.id, email: authData.record.email }
+
+  pb.authStore.save(token, authData.record)
+
+  const encrypted = await (window as any).electronAPI.storeToken(token)
+  localStorage.setItem('enc_token', encrypted)
+
+  useAuthStore.getState().setAuth(token, encrypted, user)
+  return user
+}
+
 export async function restoreSession() {
   const encrypted = localStorage.getItem('enc_token')
   if (!encrypted) return false
@@ -36,6 +52,7 @@ export async function restoreSession() {
     return false
   }
 }
+
 export function logout() {
   pb.authStore.clear()
   localStorage.removeItem('enc_token')
