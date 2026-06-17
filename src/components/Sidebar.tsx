@@ -52,8 +52,22 @@ export default function Sidebar() {
                 className="flex-1 bg-gray-600 rounded px-1 text-white outline-none"
                 value={renameVal}
                 onChange={(e) => setRenameVal(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleRename(c.id)}
-                onBlur={() => setRenaming(null)}
+onKeyDown={(e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    handleRename(c.id)
+  }
+  if (e.key === 'Escape') {
+    setRenaming(null)
+  }
+}}
+onBlur={() => {
+  if (renameVal.trim()) {
+    handleRename(c.id)
+  } else {
+    setRenaming(null)
+  }
+}}
               />
             ) : (
               <span className="flex-1 truncate">{c.title}</span>

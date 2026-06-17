@@ -43,13 +43,17 @@ migrate((app) => {
         listRule: "@request.auth.id != ''",
         viewRule: "@request.auth.id != ''",
         createRule: "@request.auth.id != ''",
-        updateRule: "@request.auth.id != ''",
-        deleteRule: "@request.auth.id != ''",
+        updateRule: "@request.auth.id = user",
+        deleteRule: "@request.auth.id = user",
     })
     app.save(messages)
 }, (app) => {
-    try { const m = app.findCollectionByNameOrId("messages");
-        app.delete(m) } catch (_) {}
-    try { const c = app.findCollectionByNameOrId("conversations");
-        app.delete(c) } catch (_) {}
+    try {
+        const m = app.findCollectionByNameOrId("messages");
+        app.delete(m)
+    } catch (_) {}
+    try {
+        const c = app.findCollectionByNameOrId("conversations");
+        app.delete(c)
+    } catch (_) {}
 })
